@@ -7,9 +7,9 @@ class SafeRequest{
         this.baseURL = config.baseURL;
     }
     fetch(options){
-        let safeFetch = fetch(this.baseURL+this.url);
+        let ydfetch = fetch(this.baseURL+this.url);
         if(options.params){
-            safeFetch = fetch(this.baseURL+this.url,{
+            ydfetch = fetch(this.baseURL+this.url,{
                 method:options.method,
                 body:options.params
             });
@@ -20,7 +20,7 @@ class SafeRequest{
                 message:"",
                 data:[]
             };
-            safeFetch
+            ydfetch
             .then(res=>res.json())
             .then((json)=>{
                 result.data = json;

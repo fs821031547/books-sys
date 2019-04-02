@@ -7,7 +7,7 @@ const add = {
                 super();
                 console.log("初始化操作");
                 this.datas = {
-                    user:"rock"
+                    user:"laoyuan"
                 }
             }
             '::template(true)' (){
