@@ -7,10 +7,29 @@ const render = require('koa-swig');
 const serve = require('koa-static');
 import errorHandler from "./middlewares/errorHandler";
 const log4js = require('log4js');
-const config = require("./config")
+const config = require("./config");
+import {
+    asClass,
+    asValue,
+    Lifetime,
+    createContainer
+} from "awilix";
+import {
+    scopePerRequest,
+    loadControllers
+} from "awilix-koa";
 // process.env.NODE_ENV
 app.use(serve(config.staticDir));
-//注入我们的路由机制
+//首先创造一个容器
+const container = createContainer();
+//把所有的services注入到容器
+container.loadModules([__dirname + "/services/*.js"], {
+    formatName: "camelCase",
+    registerOptions: {
+        lifetime: Lifetime.SCOPED
+    }
+})
+app.use(scopePerRequest(container));
 app.context.render = co.wrap(render({
     root: path.join(config.viewDir),
     autoescape: true,
@@ -24,7 +43,7 @@ log4js.configure({
     appenders: {
         cheese: {
             type: 'file',
-            filename: 'logs/book.log'
+            filename: 'logs/yd.log'
         }
     },
     categories: {
@@ -36,7 +55,10 @@ log4js.configure({
 });
 const logger = log4js.getLogger('cheese');
 errorHandler.error(app, logger);
-require("./controllers")(app);
+//自动装载路由
+app.use(loadControllers(__dirname + "/controllers/*.js"), {
+    cwd: __dirname
+});
 app.listen(config.port, () => {
     console.log("服务已启动🍺🍞");
 });

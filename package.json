@@ -18,6 +18,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "awilix": "^4.2.1",
+    "awilix-koa": "^3.1.0",
     "co": "^4.6.0",
     "cross-env": "^5.2.0",
     "koa": "^2.7.0",
